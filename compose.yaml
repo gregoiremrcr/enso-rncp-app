@@ -1,0 +1,74 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-enso}
+      POSTGRES_USER: ${POSTGRES_USER:-enso}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-enso-dev-only}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [enso]
+
+  migrate:
+    build: ./backend
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://enso:enso-dev-only@db:5432/enso}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [enso]
+
+  etl:
+    build: ./etl
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://enso:enso-dev-only@db:5432/enso}
+      SOURCE_FILE: /data/RONI.ascii.txt
+      SOURCE_METADATA_FILE: /data/SOURCE.md
+    volumes:
+      - ./data/raw:/data:ro
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks: [enso]
+
+  api:
+    build: ./backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://enso:enso-dev-only@db:5432/enso}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:8080}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    networks: [enso]
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      etl:
+        condition: service_completed_successfully
+      api:
+        condition: service_healthy
+    networks: [enso, web]
+
+networks:
+  enso:
+    internal: true
+  web:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -10,5 +10,3 @@
 - SHA-256 du fichier : `1297887f581b6190e459cbbf8bdec9a703ff65c1a229e2de4dd94285254f35c8`.
 
 La RONI est un indice relatif. Elle ne doit pas être confondue avec l'ONI. Les valeurs récentes peuvent être révisées par le CPC.
-
-L

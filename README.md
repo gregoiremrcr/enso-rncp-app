@@ -62,8 +62,7 @@ Résultats réels : ETL `1 passed`, API `1 passed`, frontend Vitest `1 passed`, 
 
 ## Usage de l'IA
 
-TODO : décrire honnêtement les outils utilisés, les parties générées ou modifiées, et les vérifications humaines effectuées.
-
+Claude a été utilisé pour la documentation et m'orienter dans l'architecture projet à mettre en place et chatgpt (luna) pour réparer les erreurs, faire le design, l'ui/ux.
 ## Limites connues
 
 - La date d'extraction exacte doit être ajoutée dans `data/raw/SOURCE.md`.

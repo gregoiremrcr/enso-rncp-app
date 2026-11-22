@@ -20,12 +20,16 @@ Les exemples sont dans [docs/api-examples.md](docs/api-examples.md) et la docume
 
 ## Données et précautions
 
-La RONI (Relative Oceanic Niño Index) est distincte de l’ONI. La source fournie indique ERSSTv6 ; la page CPC consultée confirme cette version. La date réelle de téléchargement n’était pas fournie et reste à compléter dans `data/raw/SOURCE.md`. La série présente couvre DJF 1950 à ASO 2026. Les épisodes appliquent le seuil ±0,5 °C sur au moins cinq saisons glissantes consécutives. L’application ne fait aucune prévision.
+La RONI (Relative Oceanic Niño Index) est distincte de l’ONI. La source fournie indique ERSSTv6 ; la page CPC consultée confirme cette version. Le fichier fourni a été extrait le 11 novembre 2026 ; sa période et son SHA-256 sont consignés dans `data/raw/SOURCE.md`. La série présente couvre DJF 1950 à ASO 2026. Les épisodes appliquent le seuil ±0,5 °C sur au moins cinq saisons glissantes consécutives. L’application ne fait aucune prévision.
 
 La comparaison décrit uniquement les valeurs de RONI et la règle historique de seuil. Elle n’établit pas de causalité et n’intègre pas d’autres variables climatiques.
 
 ## Développement
 
-Prérequis : Docker et Docker Compose v2. La stack est configurée pour le déploiement HTTPS. Pour lancer les vérifications applicatives, utiliser `make test` et `make lint`.
+Prérequis : Docker et Docker Compose v2. Si `.env` n’existe pas, copiez `.env.example` vers `.env`, puis renseignez le domaine et les secrets avant de lancer la stack avec `docker compose up --build -d`. La stack sert le frontend via Caddy en HTTPS ; les détails de configuration et de vérification sont dans le [guide de déploiement](docs/deployment.md). Pour lancer les vérifications applicatives, utiliser `make test` et `make lint`.
 
 Les commits suivent Conventional Commits. Les requêtes SQL utilisent des paramètres et la logique de classification des épisodes se trouve dans `backend/app/episodes.py`.
+
+## Utilisation de l’intelligence artificielle
+
+**Outil utilisé : Codex.** L’IA a contribué à la conception et à la documentation du projet. Elle a réalisé la mise en place technique du déploiement Docker Compose/Caddy : configuration des services, des réseaux, du reverse proxy et du HTTPS. La mise en ligne publique sur un domaine contrôlé et la validation d’un certificat HTTPS restent à effectuer ; le sujet rend le déploiement réel facultatif. Les choix et le code doivent pouvoir être expliqués et défendus individuellement à l’oral.

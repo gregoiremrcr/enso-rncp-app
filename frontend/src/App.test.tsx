@@ -35,7 +35,7 @@ const server = setupServer(
       index: "RONI",
       url: "https://example.test/roni",
       version: "fixture",
-      extracted_at: null,
+      extracted_at: "2026-11-11",
       period_start: "2000-01-01",
       period_end: "2000-01-01",
       file_sha256: "fixture",
@@ -73,4 +73,30 @@ test("appliquer une période recharge les observations et actualise la valeur af
   await user.click(screen.getByRole("button", { name: "Appliquer le filtre" }));
   expect(await screen.findByText("1.25")).toBeInTheDocument();
   await waitFor(() => expect(observedParams).toContain("2000-01-01|"));
+});
+
+test("affiche la date d'extraction au format français", async () => {
+  render(<App />);
+  expect(
+    await screen.findByText(/extraction : 11\/11\/2026/),
+  ).toBeInTheDocument();
+});
+
+test("utilise le repli si l'API omet la date d'extraction", async () => {
+  server.use(
+    http.get("http://localhost/api/v1/source", () =>
+      HttpResponse.json({
+        index: "RONI",
+        url: "https://example.test/roni",
+        version: "fixture",
+        period_start: "2000-01-01",
+        period_end: "2000-01-01",
+        file_sha256: "fixture",
+      }),
+    ),
+  );
+  render(<App />);
+  expect(
+    await screen.findByText(/extraction : date non indiquée/),
+  ).toBeInTheDocument();
 });

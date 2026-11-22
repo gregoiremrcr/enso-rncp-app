@@ -65,6 +65,4 @@ Résultats réels : ETL `1 passed`, API `1 passed`, frontend Vitest `1 passed`, 
 Claude a été utilisé pour la documentation et m'orienter dans l'architecture projet à mettre en place et chatgpt (luna) pour réparer les erreurs, faire le design, l'ui/ux.
 ## Limites connues
 
-- La date d'extraction exacte doit être ajoutée dans `data/raw/SOURCE.md`.
-- La date réelle de téléchargement de la série reste à compléter. La déclaration d'usage de l'IA reste à compléter.
 - La comparaison décrit uniquement les valeurs de RONI et la règle historique de seuil. Elle n'établit pas de causalité et n'intègre pas d'autres variables climatiques.

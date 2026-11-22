@@ -26,6 +26,16 @@ class ObservationResponse(BaseModel):
     observations: list[ObservationOut]
 
 
+class SourceResponse(BaseModel):
+    index: str
+    url: str
+    version: str
+    extracted_at: date | None
+    period_start: date
+    period_end: date
+    file_sha256: str
+
+
 class Episode(BaseModel):
     id: str
     type: Literal["warm", "cold"]

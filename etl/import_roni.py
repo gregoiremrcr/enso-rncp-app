@@ -129,7 +129,7 @@ def load(
     start = datetime.now(UTC)
     conn.execute(
         text(
-            "INSERT INTO source (name,url,index_code,version,extracted_at,file_sha256,period_start,period_end) VALUES (:name,:url,:index_code,:version,:extracted_at,:hash,:start,:end) ON CONFLICT (file_sha256) DO NOTHING"
+            "INSERT INTO source (name,url,index_code,version,extracted_at,file_sha256,period_start,period_end) VALUES (:name,:url,:index_code,:version,:extracted_at,:hash,:start,:end) ON CONFLICT (file_sha256) DO UPDATE SET url=EXCLUDED.url,index_code=EXCLUDED.index_code,version=EXCLUDED.version,extracted_at=EXCLUDED.extracted_at,period_start=EXCLUDED.period_start,period_end=EXCLUDED.period_end"
         ),
         {
             "name": "NOAA CPC RONI",

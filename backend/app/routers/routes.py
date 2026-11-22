@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.db import get_session
 from app.episodes import detect_episodes, episode_stats
 from app.models import ImportRun, IndexDefinition, Observation, Source
-from app.schemas import CompareResponse, Episode, ObservationResponse
+from app.schemas import CompareResponse, Episode, ObservationResponse, SourceResponse
 
 router = APIRouter()
 
@@ -48,8 +48,12 @@ def observations(
     )
 
 
-@router.get("/source", summary="Métadonnées de la dernière importation NOAA CPC")
-def source(session: Session = Depends(get_session)) -> dict[str, object]:
+@router.get(
+    "/source",
+    response_model=SourceResponse,
+    summary="Métadonnées de la dernière importation NOAA CPC",
+)
+def source(session: Session = Depends(get_session)) -> SourceResponse:
     latest = session.execute(
         select(Source, ImportRun)
         .join(ImportRun, ImportRun.source_id == Source.id)
@@ -60,15 +64,15 @@ def source(session: Session = Depends(get_session)) -> dict[str, object]:
     if not latest:
         raise HTTPException(status_code=404, detail="Aucune importation disponible.")
     item, _run = latest
-    return {
-        "index": item.index_code,
-        "url": item.url,
-        "version": item.version,
-        "extracted_at": item.extracted_at,
-        "period_start": item.period_start,
-        "period_end": item.period_end,
-        "file_sha256": item.file_sha256,
-    }
+    return SourceResponse(
+        index=item.index_code,
+        url=item.url,
+        version=item.version,
+        extracted_at=item.extracted_at,
+        period_start=item.period_start,
+        period_end=item.period_end,
+        file_sha256=item.file_sha256,
+    )
 
 
 def _episode_data(session: Session) -> tuple[list[Observation], list[Episode]]:

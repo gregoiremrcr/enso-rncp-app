@@ -16,7 +16,7 @@ export type SourceInfo = {
   index: string;
   url: string;
   version: string;
-  extracted_at: string | null;
+  extracted_at?: string | null;
   period_start: string;
   period_end: string;
   file_sha256: string;

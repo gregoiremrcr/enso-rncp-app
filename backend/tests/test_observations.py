@@ -26,7 +26,7 @@ def client():
             url="https://example.invalid/fixture",
             index_code="RONI",
             version="fixture",
-            extracted_at=None,
+            extracted_at=date(2026, 11, 11),
             file_sha256="a" * 64,
             period_start=date(2000, 1, 1),
             period_end=date(2000, 6, 1),
@@ -83,3 +83,9 @@ def test_observations_filtered_and_invalid_dates(client):
     assert body["count"] == 3
     assert client.get("/api/v1/observations?start=2000-05-01&end=2000-02-01").status_code == 400
     assert client.get("/api/v1/observations?start=not-a-date").status_code == 422
+
+
+def test_source_returns_extraction_date(client):
+    response = client.get("/api/v1/source")
+    assert response.status_code == 200
+    assert response.json()["extracted_at"] == "2026-11-11"

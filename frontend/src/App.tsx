@@ -9,6 +9,13 @@ import { useSource } from "./hooks/useSource";
 import { ErrorState } from "./components/ErrorState";
 import { Loading } from "./components/Loading";
 
+function formatExtractionDate(value?: string | null): string {
+  if (!value) return "date non indiquée";
+  const date = new Date(`${value}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("fr-FR", { timeZone: "UTC" }).format(date);
+}
+
 export default function App() {
   const [draftStart, setDraftStart] = useState("");
   const [draftEnd, setDraftEnd] = useState("");
@@ -52,7 +59,7 @@ export default function App() {
         {source && (
           <p className="source-line">
             Source : <a href={source.url}>NOAA CPC — RONI</a> · {source.version}{" "}
-            · extraction : {source.extracted_at ?? "date non indiquée"}
+            · extraction : {formatExtractionDate(source.extracted_at)}
           </p>
         )}
         {metadataError && (

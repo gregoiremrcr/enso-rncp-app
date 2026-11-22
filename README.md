@@ -6,7 +6,7 @@ ENSO Monitor présente la série historique RONI publiée par la NOAA CPC. L’a
 
 La configuration de production fait passer le trafic public par Caddy. Caddy termine HTTPS et transmet les requêtes au frontend Nginx ; Nginx relaie `/api/`, `/docs`, `/redoc` et `/openapi.json` vers l’API. L’API et PostgreSQL ne publient aucun port sur l’hôte.
 
-Suivre [le guide de déploiement](docs/deployment.md) pour configurer le DNS et `.env`, lancer Compose, vérifier HTTPS et conserver les certificats.
+Suivre [le guide de déploiement](docs/deployment.md) pour configurer le DNS et `.env`, lancer Compose, vérifier HTTPS et conserver les certificats. Les actions restantes sont listées dans le [backlog](docs/backlog.md).
 
 ## Routes
 
